@@ -51,7 +51,7 @@ end
 
 function serpentine_pattern(x, y)
     xy = reshape(collect(1:x*y), (x, y))
-    for i in 2:2:x
+    for i in 2:2:y
         xy[:, i] = reverse(xy[:, i])
     end
     return xy
