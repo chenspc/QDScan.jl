@@ -1,16 +1,18 @@
 name = "QDScan"
 uuid = "5c20f7fc-8785-4f79-944d-c9fa18151139"
 authors = ["Chen Huang"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 BijectiveHilbert = "91e7fc40-53cd-4118-bd19-d7fcd1de2a54"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [compat]
-julia = "1.9"
 BijectiveHilbert = "0.3, 1.0"
+UnicodePlots = "3.5, 4.0"
+julia = "1.9"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
