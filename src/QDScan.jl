@@ -2,10 +2,11 @@ module QDScan
 
 export make_pattern, save_pattern
 export raster_pattern, serpentine_pattern, hilbert_pattern, spiral_pattern, random_pattern, sparse_pattern
+export upsample_matrix, sequence_offset
 
 using BijectiveHilbert: Simple2D, encode_hilbert
 using Random: randperm, seed!
-using SparseArrays: sprand, nnz
+using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
 
 function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kwargs...)
@@ -27,6 +28,7 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kw
             error("pattern must be one of raster, serpentine, hilbert, spiral, random, sparse, or premade.")
         end
 
+    p = sequence_offset(p, offset)
     xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
 
     if visual == "matrix"
@@ -47,23 +49,23 @@ function save_pattern(filename, xy_list)
     return nothing
 end
 
-function raster_pattern(x, y; offset=0)
-    reshape(collect(1:x*y), (x, y)) .+ offset
+function raster_pattern(x, y)
+    reshape(collect(1:x*y), (x, y))
 end
 
-function serpentine_pattern(x, y; offset=0)
-    xy = reshape(collect(1:x*y), (x, y)) .+ offset
+function serpentine_pattern(x, y)
+    xy = reshape(collect(1:x*y), (x, y))
     for i in 2:2:x
         xy[:, i] = reverse(xy[:, i])
     end
     return xy
 end
 
-function hilbert_pattern(x, y; offset=0)
-    map(c -> encode_hilbert(Simple2D(Int), collect(Tuple(c))), CartesianIndices((x, y))) .+ offset
+function hilbert_pattern(x, y)
+    map(c -> encode_hilbert(Simple2D(Int), collect(Tuple(c))), CartesianIndices((x, y)))
 end
 
-function spiral_pattern(x, y; reverse=true, offset=0)
+function spiral_pattern(x, y; reverse=true)
     matrix = reshape(collect(1:x*y), (x, y))
     result = []
     top = 1
@@ -93,7 +95,7 @@ function spiral_pattern(x, y; reverse=true, offset=0)
 
     reverse ? reverse!(result) : nothing
     spiral_matrix = matrix
-    spiral_matrix[result] = collect(1:length(result)) .+ offset
+    spiral_matrix[result] = collect(1:length(result))
     return spiral_matrix
 end
 
@@ -126,4 +128,15 @@ function upsample_matrix(A::AbstractMatrix, k::Int; shift=(0, 0))
 
     return B
 end
+
+function sequence_offset(A::AbstractMatrix, offset::Int)
+    B = copy(A)
+    if issparse(A)
+        B.nzval[:] = collect(1:nnz(B)) .+ offset
+    else
+        B = map(x -> !iszero(x) ? x + offset : nothing, A)
+    end
+    return B
+end
+
 end
