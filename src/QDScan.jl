@@ -8,21 +8,23 @@ using Random: randperm, seed!
 using SparseArrays: sprand, nnz
 using UnicodePlots: heatmap, lineplot
 
-function make_pattern(x, y; pattern="raster", visual="matrix", kwargs...)
+function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kwargs...)
     p = if pattern == "raster"
-            raster_pattern(x, y; kwargs...)
+            raster_pattern(dims...; kwargs...)
         elseif pattern == "serpentine"
-            serpentine_pattern(x, y; kwargs...)
+            serpentine_pattern(dims...; kwargs...)
         elseif pattern == "hilbert"
-            hilbert_pattern(x, y; kwargs...)
+            hilbert_pattern(dims...; kwargs...)
         elseif pattern == "spiral"
-            spiral_pattern(x, y; kwargs...)
+            spiral_pattern(dims...; kwargs...)
         elseif pattern == "random"
-            random_pattern(x, y; kwargs...)
+            random_pattern(dims...; kwargs...)
         elseif pattern == "sparse"
-            sparse_pattern(x, y; kwargs...)
+            sparse_pattern(dims...; kwargs...)
+        elseif pattern == "premade"
+            dims # dims is a matrix
         else
-            error("pattern must be one of raster, serpentine, hilbert, spiral, random, or sparse.")
+            error("pattern must be one of raster, serpentine, hilbert, spiral, random, sparse, or premade.")
         end
 
     xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
