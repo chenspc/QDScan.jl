@@ -95,7 +95,8 @@ function spiral_pattern(x, y; reverse=true, offset=0)
     return spiral_matrix
 end
 
-function random_pattern(x, y; offset=0)
+function random_pattern(x, y; offset=0, seed=2023)
+    seed!(seed)
     reshape(randperm(x*y), (x, y)) .+ offset
 end
 
