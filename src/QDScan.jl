@@ -6,8 +6,9 @@ export raster_pattern, serpentine_pattern, hilbert_pattern, spiral_pattern, rand
 using BijectiveHilbert: Simple2D, encode_hilbert
 using Random: randperm, seed!
 using SparseArrays: sprand, nnz
+using UnicodePlots: heatmap, lineplot
 
-function make_pattern(x, y; pattern="raster", kwargs...)
+function make_pattern(x, y; pattern="raster", visual="none", kwargs...)
     p = if pattern == "raster"
             raster_pattern(x, y; kwargs...)
         elseif pattern == "serpentine"
@@ -21,10 +22,19 @@ function make_pattern(x, y; pattern="raster", kwargs...)
         elseif pattern == "sparse"
             sparse_pattern(x, y; kwargs...)
         else
-            error("pattern must be either raster or hilbert")
+            error("pattern must be one of raster, serpentine, hilbert, spiral, random, or sparse.")
         end
-    display(p)
+
     xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
+
+    if visual == "none"
+        display(p')
+    elseif visual == "heatmap"
+        display(heatmap(p; colormap=:rainbow))
+    elseif visual == "lineplot"
+        display(lineplot(first.(xy_list), last.(xy_list)))
+    end
+
     return xy_list
 end
 
