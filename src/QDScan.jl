@@ -31,13 +31,9 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kw
     p = sequence_offset(p, offset)
     xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
 
-    if visual == "matrix"
-        display(p')
-    elseif visual == "heatmap"
-        display(heatmap(p; colormap=:rainbow))
-    elseif visual == "lineplot"
-        display(lineplot(first.(xy_list), last.(xy_list)))
-    end
+    occursin("matrix", join(visual)) ? display(p') : nothing
+    occursin("heatmap", join(visual)) ? display(heatmap(p; colormap=:rainbow)) : nothing
+    occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list))) : nothing
 
     return xy_list
 end
