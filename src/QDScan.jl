@@ -111,4 +111,17 @@ function sparse_pattern(x, y; offset=0, p=0.5, seed=2023, ordered=true)
     return s
 end
 
+function upsample_matrix(A::AbstractMatrix, k::Int; shift=(0, 0))
+    m, n = size(A)
+    B = spzeros(eltype(A), m * k, n * k)
+    s = mod.(Int.(trunc.(shift .+ (k-1)/2)), k)
+
+    for i in 1:m
+        for j in 1:n
+            B[(i-1)*k+1+s[1], (j-1)*k+1+s[2]] = A[i, j]
+        end
+    end
+
+    return B
+end
 end
