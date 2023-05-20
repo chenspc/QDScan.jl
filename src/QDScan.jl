@@ -8,7 +8,7 @@ using Random: randperm, seed!
 using SparseArrays: sprand, nnz
 using UnicodePlots: heatmap, lineplot
 
-function make_pattern(x, y; pattern="raster", visual="none", kwargs...)
+function make_pattern(x, y; pattern="raster", visual="matrix", kwargs...)
     p = if pattern == "raster"
             raster_pattern(x, y; kwargs...)
         elseif pattern == "serpentine"
@@ -27,7 +27,7 @@ function make_pattern(x, y; pattern="raster", visual="none", kwargs...)
 
     xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
 
-    if visual == "none"
+    if visual == "matrix"
         display(p')
     elseif visual == "heatmap"
         display(heatmap(p; colormap=:rainbow))
