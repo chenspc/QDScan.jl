@@ -95,18 +95,18 @@ function spiral_pattern(x, y; reverse=true)
     return spiral_matrix
 end
 
-function random_pattern(x, y; offset=0, seed=2023)
+function random_pattern(x, y;seed=2023)
     seed!(seed)
-    reshape(randperm(x*y), (x, y)) .+ offset
+    reshape(randperm(x*y), (x, y))
 end
 
-function sparse_pattern(x, y; offset=0, p=0.5, seed=2023, ordered=true)
+function sparse_pattern(x, y; p=0.5, seed=2023, ordered=true)
     seed!(seed)
     s = sprand(Int, x, y, p)
     if ordered
-        s.nzval[:] = collect(1:nnz(s)) .+ offset
+        s.nzval[:] = collect(1:nnz(s))
     else
-        s.nzval[:] = randperm(nnz(s)) .+ offset
+        s.nzval[:] = randperm(nnz(s))
     end
     return s
 end
@@ -128,9 +128,9 @@ end
 function sequence_offset(A::AbstractMatrix, offset::Int)
     B = copy(A)
     if issparse(A)
-        B.nzval[:] = collect(1:nnz(B)) .+ offset
+        B.nzval[:] = B.nzval .+ offset
     else
-        B = map(x -> !iszero(x) ? x + offset : nothing, A)
+        B = map(x -> !iszero(x) ? x + offset : x, A)
     end
     return B
 end
