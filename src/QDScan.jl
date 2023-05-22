@@ -9,7 +9,7 @@ using Random: randperm, seed!
 using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
 
-function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kwargs...)
+function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, kwargs...)
     p = if pattern == "raster"
             raster_pattern(dims...; kwargs...)
         elseif pattern == "serpentine"
@@ -29,18 +29,23 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", kw
         end
 
     p = sequence_offset(p, offset)
-    xy_list = map(x -> x.I, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
+    ind_list = last(sortperm(vec(p)), count(!iszero, p)) .- 1
+    xy_list = map(x -> x.I .- 1, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
 
     occursin("matrix", join(visual)) ? display(p') : nothing
     occursin("heatmap", join(visual)) ? display(heatmap(p; colormap=:rainbow)) : nothing
     occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list))) : nothing
 
-    return xy_list
+    return linear_index ? ind_list : xy_list
 end
 
 function save_pattern(filename, xy_list)
     open(filename, "w") do io
-        [write(io, "$x,$y\n") for (x, y) in xy_list]
+        if eltype(xy_list) <: Int
+            [write(io, "$x\n") for x in xy_list]
+        elseif eltype(xy_list) <: Tuple{Int, Int}
+            [write(io, "$x,$y\n") for (x, y) in xy_list]
+        end
     end
     return nothing
 end
