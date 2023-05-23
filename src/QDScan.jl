@@ -9,7 +9,7 @@ using Random: randperm, seed!
 using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
 
-function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, kwargs...)
+function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multiframe=1, kwargs...)
     p = if pattern == "raster"
             raster_pattern(dims...; kwargs...)
         elseif pattern == "serpentine"
@@ -36,7 +36,13 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
     occursin("heatmap", join(visual)) ? display(heatmap(p; colormap=:rainbow)) : nothing
     occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list))) : nothing
 
-    return linear_index ? ind_list : xy_list
+    if linear_index
+        output_list = multiframe > 1 ? ind_list = repeat(ind_list, inner=multiframe) : ind_list
+    else
+        output_list = multiframe > 1 ? xy_list = repeat(xy_list, inner=multiframe) : xy_list
+    end
+
+    return output_list
 end
 
 function save_pattern(filename, xy_list)
