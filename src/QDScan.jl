@@ -8,7 +8,7 @@ using BijectiveHilbert: Simple2D, encode_hilbert
 using Random: randperm, seed!
 using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
-using IterTools: product
+
 
 function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multipass=1, kwargs...)
     p = if pattern == "raster"
@@ -116,7 +116,7 @@ function interleave_pattern(x, y, k)
     @assert mod.((x, y), k) == (0, 0)
     xi, yi = (x, y) .÷ k
     m = raster_pattern(xi, yi)
-    ms = [sequence_offset(upsample_matrix(m, k; shift=s.+(k,k).÷2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(product(1:k, 1:k))]
+    ms = [sequence_offset(upsample_matrix(m, k; shift=s.+(k,k).÷2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(Iterators.product(1:k, 1:k))]
     return +(ms...) |> Array
 end
 

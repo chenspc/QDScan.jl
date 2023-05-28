@@ -5,7 +5,6 @@ version = "0.3.0"
 
 [deps]
 BijectiveHilbert = "91e7fc40-53cd-4118-bd19-d7fcd1de2a54"
-IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
@@ -13,7 +12,6 @@ UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 [compat]
 BijectiveHilbert = "0.3, 1.0"
 UnicodePlots = "3.0, 4.0"
-IterTools = "1.0, 2.0"
 julia = "1.9"
 
 [extras]
