@@ -41,8 +41,8 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
     rep = last.(temp)
 
     occursin("matrix", join(visual)) ? display(real(p)') : nothing
-    occursin("heatmap", join(visual)) ? display(heatmap(real(p); colormap=:rainbow)) : nothing
-    occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list))) : nothing
+    occursin("heatmap", join(visual)) ? display(heatmap(real(p); colormap=:rainbow, yflip=true)) : nothing
+    occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list); yflip=true)) : nothing
 
     output_list = linear_index ? ind_list : xy_list
     output_list = map((x,y) -> repeat([x], y), output_list, rep) |> x -> vcat(x...)
