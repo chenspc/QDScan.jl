@@ -34,11 +34,7 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
     p = sequence_offset(p, offset)
     nonzero_ind = last(sortperm(vec(real(p))), count(x -> !iszero(real(x)), p))
     ind_list = nonzero_ind .- 1
-
-    temp = map(x -> (x.I .- 1, imag(p[x.I...]) + 1), CartesianIndices(size(p))[nonzero_ind])
-
-    xy_list = first.(temp)
-    rep = last.(temp)
+    xy_list, rep = map(x -> (x.I .- 1, imag(p[x.I...]) + 1), CartesianIndices(size(p))[nonzero_ind]) |> x -> (first.(x), last.(x))
 
     occursin("matrix", join(visual)) ? display(real(p)') : nothing
     occursin("heatmap", join(visual)) ? display(heatmap(real(p); colormap=:rainbow, yflip=true)) : nothing
