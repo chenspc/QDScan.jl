@@ -1,7 +1,7 @@
 module QDScan
 
 export make_pattern, save_pattern
-export raster_pattern, serpentine_pattern, hilbert_pattern, spiral_pattern, random_pattern, sparse_pattern
+export raster_pattern, serpentine_pattern, hilbert_pattern, spiral_pattern, interleave_pattern, random_pattern, sparse_pattern
 export upsample_matrix, sequence_offset
 
 using BijectiveHilbert: Simple2D, encode_hilbert
