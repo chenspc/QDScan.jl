@@ -112,7 +112,7 @@ function interleave_pattern(x, y, k)
     @assert mod.((x, y), k) == (0, 0)
     xi, yi = (x, y) .÷ k
     m = raster_pattern(xi, yi)
-    ms = [sequence_offset(upsample_matrix(m, k; shift=s.+(k,k).÷2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(Iterators.product(1:k, 1:k))]
+    ms = [sequence_offset(upsample_matrix(m, k; shift=s .+ k .÷ 2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(Iterators.product(1:first(k), 1:last(k)))]
     return +(ms...) |> Array
 end
 
@@ -132,14 +132,14 @@ function sparse_pattern(x, y; p=0.5, seed=2023, ordered=true)
     return s
 end
 
-function upsample_matrix(A::AbstractMatrix, k::Int; shift=(0, 0))
+function upsample_matrix(A::AbstractMatrix, k; shift=(0, 0))
     m, n = size(A)
-    B = spzeros(eltype(A), m * k, n * k)
-    s = mod.(Int.(trunc.(shift .+ (k-1)/2)), k)
+    B = spzeros(eltype(A), m * first(k), n * last(k))
+    s = mod.(Int.(trunc.(shift .+ (k .- 1) ./ 2)), k)
 
     for i in 1:m
         for j in 1:n
-            B[(i-1)*k+1+s[1], (j-1)*k+1+s[2]] = A[i, j]
+            B[(i-1) * first(k) + 1 + s[1], (j-1) * last(k) + 1 + s[2]] = A[i, j]
         end
     end
 
