@@ -9,7 +9,7 @@ using Random: randperm, seed!
 using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
 
-function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multiframe=1, kwargs...)
+function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multipass=1, kwargs...)
     p = if pattern == "raster"
             raster_pattern(dims...; kwargs...)
         elseif pattern == "serpentine"
@@ -29,18 +29,21 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
         end
 
     p = sequence_offset(p, offset)
-    ind_list = last(sortperm(vec(p)), count(!iszero, p)) .- 1
-    xy_list = map(x -> x.I .- 1, CartesianIndices(size(p))[last(sortperm(vec(p)), count(!iszero, p))])
+    nonzero_ind = last(sortperm(vec(real(p))), count(x -> !iszero(real(x)), p))
+    ind_list = nonzero_ind .- 1
 
-    occursin("matrix", join(visual)) ? display(p') : nothing
-    occursin("heatmap", join(visual)) ? display(heatmap(p; colormap=:rainbow)) : nothing
+    temp = map(x -> (x.I .- 1, imag(p[x.I...]) + 1), CartesianIndices(size(p))[nonzero_ind])
+
+    xy_list = first.(temp)
+    rep = last.(temp)
+
+    occursin("matrix", join(visual)) ? display(real(p)') : nothing
+    occursin("heatmap", join(visual)) ? display(heatmap(real(p); colormap=:rainbow)) : nothing
     occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list), last.(xy_list))) : nothing
 
-    if linear_index
-        output_list = multiframe > 1 ? ind_list = repeat(ind_list, inner=multiframe) : ind_list
-    else
-        output_list = multiframe > 1 ? xy_list = repeat(xy_list, inner=multiframe) : xy_list
-    end
+    output_list = linear_index ? ind_list : xy_list
+    output_list = map((x,y) -> repeat([x], y), output_list, rep) |> x -> vcat(x...)
+    output_list = multipass > 1 ? output_list = repeat(output_list, multipass) : output_list
 
     return output_list
 end
@@ -141,7 +144,7 @@ function sequence_offset(A::AbstractMatrix, offset::Int)
     if issparse(A)
         B.nzval[:] = B.nzval .+ offset
     else
-        B = map(x -> !iszero(x) ? x + offset : x, A)
+        B = map(x -> !iszero(real(x)) ? x + offset : x, A)
     end
     return B
 end

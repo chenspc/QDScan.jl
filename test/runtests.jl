@@ -1,13 +1,39 @@
 using QDScan
 using SparseArrays: sparse
+using SparseArrays
 using Test
 
-@testset "QDScan.jl" begin
+@testset "Basic patterns" begin
     @test raster_pattern(3, 3) == [1 4 7; 2 5 8; 3 6 9]
     @test serpentine_pattern(4, 3) == [1 8 9; 2 7 10; 3 6 11; 4 5 12]
     @test hilbert_pattern(4, 4) == [1 2 15 16; 4 3 14 13; 5 8 9 12; 6 7 10 11]
     @test spiral_pattern(4, 4; reverse=true) == [16 15 14 13; 5 4 3 12; 6 1 2 11; 7 8 9 10]
     @test spiral_pattern(4, 4; reverse=false) == [1 2 3 4; 12 13 14 5; 11 16 15 6; 10 9 8 7]
+
+    @test make_pattern((3, 3); pattern="raster") == [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)]
+    @test make_pattern((4, 3); pattern="serpentine") == [(0, 0), (1, 0), (2, 0), (3, 0), (3, 1), (2, 1), (1, 1), (0, 1), (0, 2), (1, 2), (2, 2), (3, 2)]
+    @test make_pattern((4, 4); pattern="hilbert") == [(0, 0), (0, 1), (1, 1), (1, 0), (2, 0), (3, 0), (3, 1), (2, 1), (2, 2), (3, 2), (3, 3), (2, 3), (1, 3), (1, 2), (0, 2), (0, 3)]
+    @test make_pattern((4, 4); pattern="spiral", reverse=true) == [(2, 1), (2, 2), (1, 2), (1, 1), (1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3), (2, 3), (1, 3), (0, 3), (0, 2), (0, 1), (0, 0)]
+    @test make_pattern((4, 4); pattern="spiral", reverse=false) == [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (2, 3), (3, 3), (3, 2), (3, 1), (3, 0), (2, 0), (1, 0), (1, 1), (1, 2), (2, 2), (2, 1)]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1, 2, 4]); pattern="premade") == [(0, 0), (0, 1), (1, 1)]
+
+    @test make_pattern((3, 3); pattern="raster", linear_index=true) == [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    @test make_pattern((4, 3); pattern="serpentine", linear_index=true) == [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11]
+    @test make_pattern((4, 4); pattern="hilbert", linear_index=true) == [0, 4, 5, 1, 2, 3, 7, 6, 10, 11, 15, 14, 13, 9, 8, 12]
+    @test make_pattern((4, 4); pattern="spiral", linear_index=true, reverse=true) == [6, 10, 9, 5, 1, 2, 3, 7, 11, 15, 14, 13, 12, 8, 4, 0]
+    @test make_pattern((4, 4); pattern="spiral", linear_index=true, reverse=false) == [0, 4, 8, 12, 13, 14, 15, 11, 7, 3, 2, 1, 5, 9, 10, 6]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1, 2, 4]); pattern="premade", linear_index=true) == [0, 2, 3]
+end
+
+@testset "Repeat" begin
+    @test make_pattern([[1+1im, 2+2im] [3, 4+1im]] ; pattern="premade") == [(0, 0), (0, 0), (1, 0), (1, 0), (1, 0), (0, 1), (1, 1), (1, 1)]
+    @test make_pattern([[1+1im, 2+2im] [3, 4+1im]] ; pattern="premade", linear_index=true) == [0, 0, 1, 1, 1, 2, 3, 3]
+    @test make_pattern([[1+1im, 2+2im] [3, 4+1im]] ; pattern="premade", multipass=2) == [(0, 0), (0, 0), (1, 0), (1, 0), (1, 0), (0, 1), (1, 1), (1, 1), (0, 0), (0, 0), (1, 0), (1, 0), (1, 0), (0, 1), (1, 1), (1, 1)]
+    @test make_pattern([[1+1im, 2+2im] [3, 4+1im]] ; pattern="premade", multipass=2, linear_index=true) == [0, 0, 1, 1, 1, 2, 3, 3, 0, 0, 1, 1, 1, 2, 3, 3]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1+3im, 2, 4+1im]); pattern="premade", multipass=2) == [(0, 0), (0, 0), (0, 0), (0, 0), (0, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0), (0, 0), (0, 1), (1, 1), (1, 1)]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1+3im, 2, 4+1im]); pattern="premade", multipass=2, linear_index=true) == [0, 0, 0, 0, 2, 3, 3, 0, 0, 0, 0, 2, 3, 3]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1+3im, 2, 4+1im]); pattern="premade", multipass=2) == [(0, 0), (0, 0), (0, 0), (0, 0), (0, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0), (0, 0), (0, 1), (1, 1), (1, 1)]
+    @test make_pattern(sparse([1, 1, 2], [1, 2, 2], [1+3im, 2, 4+1im]); pattern="premade", multipass=2, linear_index=true) == [0, 0, 0, 0, 2, 3, 3, 0, 0, 0, 0, 2, 3, 3]
 end
 
 @testset "Up-sampling" begin
