@@ -37,7 +37,7 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
     xy_list, rep = map(x -> (x.I .- 1, imag(p[x.I...]) + 1), CartesianIndices(size(p))[nonzero_ind]) |> x -> (first.(x), last.(x))
 
     occursin("matrix", join(visual)) ? display(real(p)') : nothing
-    occursin("heatmap", join(visual)) ? display(heatmap(real(p); colormap=:rainbow, yflip=true)) : nothing
+    occursin("heatmap", join(visual)) ? display(heatmap(real(p)'; colormap=:rainbow, yflip=true)) : nothing
     occursin("lineplot", join(visual)) ? display(lineplot(first.(xy_list) .+ 1, last.(xy_list) .+ 1; yflip=true)) : nothing
 
     output_list = linear_index ? ind_list : xy_list
