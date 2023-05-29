@@ -21,6 +21,7 @@ or for development:
 pkg> dev git@github.com:chenspc/QDScan.jl.git
 ```
 
+## Patterns
 
 ### Raster
 ```julia
@@ -66,7 +67,7 @@ make_pattern(10, 10; pattern="sparse", visual="heatmap") == make_pattern(10, 10,
 ```
 <img width="1095" alt="qdscan_example_sparse" src="https://github.com/chenspc/QDScan.jl/assets/10161227/056f7d8c-83bf-4198-b4c0-8524d89113d6">
 
-### Premade
+### Premade patterns
 * Any matrix with positive integer elements that do not repeat can be converted into a pattern. Simply give the matrix as the first input to `make_pattern`. 
 * Julia matrices are column major, counting first from top to bottom, while scan patterns are typically displayed from left to right first, hence appearing transposed after the `make_pattern` function. 
 * QD Scan Engine use 0-based index, so the pattern coordinates need to subtract 1, or (1, 1). 
