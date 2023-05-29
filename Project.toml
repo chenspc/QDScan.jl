@@ -1,7 +1,7 @@
 name = "QDScan"
 uuid = "5c20f7fc-8785-4f79-944d-c9fa18151139"
 authors = ["Chen Huang"]
-version = "0.4.0"
+version = "0.4.1"
 
 [deps]
 BijectiveHilbert = "91e7fc40-53cd-4118-bd19-d7fcd1de2a54"
