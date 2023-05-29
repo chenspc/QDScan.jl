@@ -106,7 +106,7 @@ julia> p = make_pattern(A; pattern="premade", linear_index=true)
 ```
 ## Repeat a pattern
 ### Repeat at the same position before moving on to the next position
-The `make_pattern` function can accept a complex matrix as input. When an element is real, the probe will stop for one dwell period before moving onto the next. A complex element in the matrix, e.g. `4 + 2im` means dwelling at position `4` for five periods (1 original + 2 additional). 
+The `make_pattern` function can accept a complex matrix as input. When an element is real, the probe will stop for one dwell period before moving onto the next. A complex element in the matrix, e.g. `4 + 2im` means dwelling at position `4` for 3 periods (1 default + 2 additional). 
 ```julia
 julia> B = A .+ 2im
 2×3 Matrix{Complex{Int64}}:
