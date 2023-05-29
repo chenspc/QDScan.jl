@@ -6,6 +6,8 @@
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/chenspc/QDScan.jl?svg=true)](https://ci.appveyor.com/project/chenspc/QDScan-jl)
 [![Coverage](https://codecov.io/gh/chenspc/QDScan.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/chenspc/QDScan.jl)
 
+A package to generate input files for QuantumDetectors Scan Engine. 
+
 ## Installation
 
 ### Install Julia
