@@ -104,8 +104,70 @@ julia> p = make_pattern(A; pattern="premade", linear_index=true)
  0
  1
 ```
+## Repeat a pattern
+### Repeat at the same position before moving on to the next position
+The `make_pattern` function can accept a complex matrix as input. When an element is real, the probe will stop for one dwell period before moving onto the next. A complex element in the matrix, e.g. `4 + 2im` means dwelling at position `4` for five periods (1 original + 2 additional). 
+```julia
+julia> B = A .+ 2im
+2×3 Matrix{Complex{Int64}}:
+ 5+2im  4+2im  1+2im
+ 6+2im  3+2im  2+2im
 
-### Save pattern to file
+julia> ppp = make_pattern(B; pattern="premade", linear_index=true)
+3×2 adjoint(::Matrix{Int64}) with eltype Int64:
+ 5  6
+ 4  3
+ 1  2
+18-element Vector{Int64}:
+ 4
+ 4
+ 4
+ 5
+ 5
+ 5
+ 3
+ 3
+ 3
+ 2
+ 2
+ 2
+ 0
+ 0
+ 0
+ 1
+ 1
+ 1
+```
+### Multiple passes of the same pattern (including multiple frames if the matrix is complex)
+One can also simply repeat the whole pattern by providing the optional `multipass` variable
+```julia
+julia> px3 = make_pattern(A; pattern="premade", linear_index=true, multipass=3)
+3×2 adjoint(::Matrix{Int64}) with eltype Int64:
+ 5  6
+ 4  3
+ 1  2
+18-element Vector{Int64}:
+ 4
+ 5
+ 3
+ 2
+ 0
+ 1
+ 4
+ 5
+ 3
+ 2
+ 0
+ 1
+ 4
+ 5
+ 3
+ 2
+ 0
+ 1
+```
+
+## Save pattern to file
 ```julia
 save_pattern("test_pattern.csv", p)
 ```
