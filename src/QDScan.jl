@@ -121,7 +121,7 @@ function random_pattern(x, y; seed=2023)
     reshape(randperm(x*y), (x, y))
 end
 
-function sparse_pattern(x, y; p=0.5, seed=2023, ordered=true)
+function sparse_pattern(x, y, p; seed=2023, ordered=true)
     seed!(seed)
     s = sprand(Int, x, y, p)
     if ordered
@@ -131,6 +131,7 @@ function sparse_pattern(x, y; p=0.5, seed=2023, ordered=true)
     end
     return s
 end
+sparse_pattern(x, y; kwargs...) = sparse_pattern(x, y, 0.5; kwargs...)
 
 function upsample_matrix(A::AbstractMatrix, k; shift=(0, 0))
     m, n = size(A)
