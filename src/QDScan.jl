@@ -10,7 +10,7 @@ using SparseArrays: sprand, nnz, spzeros, issparse
 using UnicodePlots: heatmap, lineplot
 
 
-function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multipass=1, kwargs...)
+function make_pattern(dims...; pattern="raster", offset::Int=0, visual="matrix", linear_index=false, multipass=1, kwargs...)
     p = if pattern == "raster"
             raster_pattern(dims...; kwargs...)
         elseif pattern == "serpentine"
@@ -26,7 +26,7 @@ function make_pattern(dims; pattern="raster", offset::Int=0, visual="matrix", li
         elseif pattern == "sparse"
             sparse_pattern(dims...; kwargs...)
         elseif pattern == "premade"
-            dims # dims is a matrix
+            first(dims) # dims is a matrix
         else
             error("pattern must be one of raster, serpentine, hilbert, spiral, random, sparse, or premade.")
         end
