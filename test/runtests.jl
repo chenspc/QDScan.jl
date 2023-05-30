@@ -45,15 +45,15 @@ end
 end
 
 @testset "Up-sampling" begin
-    @test upsample_matrix([1 2; 3 4], 2) == [1 0 2 0; 0 0 0 0; 3 0 4 0; 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], 2; shift=(1, 1)) == [0 0 0 0; 0 1 0 2; 0 0 0 0; 0 3 0 4]
-    @test upsample_matrix([1 2; 3 4], 2; shift=(-1, -1)) == [1 0 2 0; 0 0 0 0; 3 0 4 0; 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], 3) == [0 0 0 0 0 0; 0 1 0 0 2 0; 0 0 0 0 0 0; 0 0 0 0 0 0; 0 3 0 0 4 0; 0 0 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], 3; shift=(-1, -1)) == [1 0 0 2 0 0; 0 0 0 0 0 0; 0 0 0 0 0 0; 3 0 0 4 0 0; 0 0 0 0 0 0; 0 0 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], 3; shift=(1, 1)) == [0 0 0 0 0 0; 0 0 0 0 0 0; 0 0 1 0 0 2; 0 0 0 0 0 0; 0 0 0 0 0 0; 0 0 3 0 0 4]
-    @test upsample_matrix([1 2; 3 4], (2, 3)) == [0 1 0 0 2 0; 0 0 0 0 0 0; 0 3 0 0 4 0; 0 0 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], (2, 3); shift=(-1, -1)) == [1 0 0 2 0 0; 0 0 0 0 0 0; 3 0 0 4 0 0; 0 0 0 0 0 0]
-    @test upsample_matrix([1 2; 3 4], (2, 3); shift=(1, 1)) == [0 0 0 0 0 0; 0 0 1 0 0 2; 0 0 0 0 0 0; 0 0 3 0 0 4]
+    @test upsample_pattern([1 2; 3 4], 2) == [1 0 2 0; 0 0 0 0; 3 0 4 0; 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], 2; shift=(1, 1)) == [0 0 0 0; 0 1 0 2; 0 0 0 0; 0 3 0 4]
+    @test upsample_pattern([1 2; 3 4], 2; shift=(-1, -1)) == [1 0 2 0; 0 0 0 0; 3 0 4 0; 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], 3) == [0 0 0 0 0 0; 0 1 0 0 2 0; 0 0 0 0 0 0; 0 0 0 0 0 0; 0 3 0 0 4 0; 0 0 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], 3; shift=(-1, -1)) == [1 0 0 2 0 0; 0 0 0 0 0 0; 0 0 0 0 0 0; 3 0 0 4 0 0; 0 0 0 0 0 0; 0 0 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], 3; shift=(1, 1)) == [0 0 0 0 0 0; 0 0 0 0 0 0; 0 0 1 0 0 2; 0 0 0 0 0 0; 0 0 0 0 0 0; 0 0 3 0 0 4]
+    @test upsample_pattern([1 2; 3 4], (2, 3)) == [0 1 0 0 2 0; 0 0 0 0 0 0; 0 3 0 0 4 0; 0 0 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], (2, 3); shift=(-1, -1)) == [1 0 0 2 0 0; 0 0 0 0 0 0; 3 0 0 4 0 0; 0 0 0 0 0 0]
+    @test upsample_pattern([1 2; 3 4], (2, 3); shift=(1, 1)) == [0 0 0 0 0 0; 0 0 1 0 0 2; 0 0 0 0 0 0; 0 0 3 0 0 4]
 end
 
 @testset "Offset" begin
