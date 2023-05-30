@@ -2,7 +2,7 @@ module QDScan
 
 export make_pattern, save_pattern
 export raster_pattern, serpentine_pattern, hilbert_pattern, spiral_pattern, interleave_pattern, random_pattern, sparse_pattern
-export upsample_matrix, sequence_offset
+export upsample_pattern, sequence_offset
 
 using BijectiveHilbert: Simple2D, encode_hilbert
 using Random: randperm, seed!
@@ -112,7 +112,7 @@ function interleave_pattern(x, y, k)
     @assert mod.((x, y), k) == (0, 0)
     xi, yi = (x, y) .÷ k
     m = raster_pattern(xi, yi)
-    ms = [sequence_offset(upsample_matrix(m, k; shift=s .+ k .÷ 2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(Iterators.product(1:first(k), 1:last(k)))]
+    ms = [sequence_offset(upsample_pattern(m, k; shift=s .+ k .÷ 2), prod(size(m)) * (t - 1)) for (t, s) in enumerate(Iterators.product(1:first(k), 1:last(k)))]
     return +(ms...) |> Array
 end
 
@@ -133,7 +133,7 @@ function sparse_pattern(x, y, p; seed=2023, ordered=true)
 end
 sparse_pattern(x, y; kwargs...) = sparse_pattern(x, y, 0.5; kwargs...)
 
-function upsample_matrix(A::AbstractMatrix, k; shift=(0, 0))
+function upsample_pattern(A::AbstractMatrix, k; shift=(0, 0))
     m, n = size(A)
     B = spzeros(eltype(A), m * first(k), n * last(k))
     s = mod.(Int.(trunc.(shift .+ (k .- 1) ./ 2)), k)
