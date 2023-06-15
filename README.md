@@ -14,7 +14,7 @@ A package for generating input files for QuantumDetectors Scan Engine.
 [Downloads](https://julialang.org/downloads/) and [Documentation](https://docs.julialang.org/)
 
 ### Install QDScan.jl
-Press `[` in a Julia REPL to access package mode, then for using the package:
+Press `]` in a Julia REPL to access package mode, then for using the package:
 ```juila
 pkg> add git@github.com:chenspc/QDScan.jl.git
 ```
